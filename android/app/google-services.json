@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "486391732812",
+    "firebase_url": "https://rn-note-app-f5203-default-rtdb.firebaseio.com",
+    "project_id": "rn-note-app-f5203",
+    "storage_bucket": "rn-note-app-f5203.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486391732812:android:d417af0e8e0a2c88edf2e9",
+        "android_client_info": {
+          "package_name": "com.rn_noteapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBY_ARdZkEYlN0uTJ3cDbDMBNm1eJBLvLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
