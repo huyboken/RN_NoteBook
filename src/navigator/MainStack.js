@@ -3,12 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {
-  CalendarScreen,
-  HomeScreen,
-  NoteScreen,
-  PasswordScreen,
-} from '../screens';
+import {CalendarScreen, HomeScreen, NoteScreen} from '../screens';
 import {StyleSheet, Text, View} from 'react-native';
 import {ViewApp} from '../components';
 import {Fonts} from '../constant';
@@ -23,7 +18,7 @@ export default function MainStack() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({type: actions.GET_ALL_PASSWORD});
+    dispatch({type: actions.GET_ALL_PASSWORD, shouldOverwriteExist: true});
   }, []);
 
   return (

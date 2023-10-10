@@ -9,23 +9,30 @@ import styles from './style';
 interface ICustomViewProps extends ViewProps {
   ref: React.Ref<View | null>;
   background: Boolean;
+  backgroundStatusBar: any
 }
 
 const Container: React.FC<ICustomViewProps> = (
-  { background, children, ...rest },
+  { background, backgroundStatusBar = 'transparent', children, ...rest },
   ref,
 ) => {
   const insets = useSafeAreaInsets();
   const defaultStyle = {
-    paddingTop: insets.top,
+    // paddingTop: insets.top,
     paddingLeft: insets.left,
     paddingRight: insets.right,
     flex: 1,
     backgroundColor: '#F6FEFF',
   };
+
   return (
     <View {...rest} style={[defaultStyle, rest.style]} ref={ref}>
-      <StatusBar barStyle="dark-content" />
+      <View style={{ height: insets.top, backgroundColor: backgroundStatusBar, zIndex: 100 }}>
+        <StatusBar
+          animated={true}
+          backgroundColor={backgroundStatusBar}
+          barStyle={"dark-content"} />
+      </View>
       {background && (
         <SvgXml
           preserveAspectRatio="xMinYMin slice"

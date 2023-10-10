@@ -36,33 +36,19 @@ const Toolbar = ({
   }, [controller]);
 
   return (
-    <View
-      ref={toolbarRef}
-      style={[
-        styles.toolbar,
-        {...style},
-        border && {borderBottomColor: Colors.LIGHT_GREY3, borderBottomWidth: 1},
-      ]}>
+    <View ref={toolbarRef} style={[styles.toolbar, {...style}, border && {borderBottomColor: Colors.LIGHT_GREY3, borderBottomWidth: 1}]}>
       {showBackIcon &&
         (typeof iconLeft === 'function' ? (
           iconLeft()
         ) : (
-          <TouchableOpacity
-            style={styles.iconLeft}
-            onPress={onIconLeftPressed || navigation.goBack}>
+          <TouchableOpacity style={styles.iconLeft} onPress={onIconLeftPressed || navigation.goBack}>
             <Ionicons style={styles.arrow} name="arrow-back" />
           </TouchableOpacity>
         ))}
       {typeof centerComponent === 'function' ? (
         centerComponent()
       ) : (
-        <Text
-          style={[
-            styles.title,
-            titleStyle,
-            {display: showTitle ? 'flex' : 'none'},
-          ]}
-          numberOfLines={1}>
+        <Text style={[styles.title, titleStyle, {display: showTitle ? 'flex' : 'none'}]} numberOfLines={1}>
           {title}
         </Text>
       )}

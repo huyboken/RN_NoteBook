@@ -1,49 +1,53 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
-// import store from '../redux/store';
 
-const getAll = async (collection, collection2) => {
+const getAll = async (collection, currentPage = 10, lastVisible = '') => {
   const userId = await AsyncStorage.getItem('UserId');
   return firestore()
     .collection(collection)
-    .doc(userId)
-    .collection(collection2)
+    .where('userId', '==', userId)
     .orderBy('timestamp', 'desc')
+    .startAfter(lastVisible)
+    .limit(currentPage)
     .get()
     .then(res => {
-      const passwordArray = [];
+      const newData = [];
+      const newLastVisible = res.docs[res.docs.length - 1];
       res.forEach(doc => {
-        passwordArray.push({id: doc.id, ...doc.data()});
+        newData.push({id: doc.id, ...doc.data()});
       });
-      return passwordArray;
-    });
+
+      return {data: newData, lastVisible: newLastVisible};
+    })
+    .catch(error => ({status: 0, message: error || `get ${collection} fail`}));
 };
 
-const create = async (collection, collection2, bodyData) => {
+const create = async (collection, bodyData) => {
   const userId = await AsyncStorage.getItem('UserId');
   return firestore()
     .collection(collection)
-    .doc(userId)
-    .collection(collection2)
-    .add({...bodyData, timestamp: firestore.FieldValue.serverTimestamp()})
+    .add({
+      ...bodyData,
+      createAt: firestore.FieldValue.serverTimestamp(),
+      timestamp: firestore.FieldValue.serverTimestamp(),
+      userId: userId,
+    })
     .then(res => {
       return {status: 1, message: 'create success', id: res.id};
     })
-    .catch(error => ({status: 0, message: error || 'create fail'}));
+    .catch(error => ({status: 0, message: error || `create ${collection} fail`}));
 };
 
-const remove = async (collection, collection2, bodyData) => {
-  const userId = await AsyncStorage.getItem('UserId');
+const remove = async (collection, bodyData) => {
+  // const userId = await AsyncStorage.getItem('UserId');
   return firestore()
     .collection(collection)
-    .doc(userId)
-    .collection(collection2)
     .doc(bodyData)
     .delete()
     .then(res => {
       return {status: 1, message: 'delete success'};
     })
-    .catch(error => ({status: 0, message: error || 'remove fail'}));
+    .catch(error => ({status: 0, message: error || `remove ${collection} fail`}));
 };
 
 export default {getAll, create, remove};

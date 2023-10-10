@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Text, View, Animated, Pressable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './style';
 
 interface PanelProps {
-  title: String;
+  title: string;
   children: React.ReactNode;
   type: 'separate' | 'transparent';
 }
@@ -18,33 +18,33 @@ const Panel: React.FC<PanelProps> = ({ title, children, type = 'separate' }) => 
   const [minValueSet, setMinValueSet] = useState(false);
   const [cardHeight, setCardHeight] = useState<any>('auto');
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
     let initialValue = expanded ? maxHeight + minHeight : minHeight;
     let finalValue = expanded ? minHeight : maxHeight + minHeight;
 
-    setExpanded(!expanded);
+    setExpanded((prevExpanded) => !prevExpanded);
 
     Animated.spring(animation, {
       toValue: finalValue,
       useNativeDriver: true,
     }).start();
-  };
+  }, [animation, expanded, maxHeight, minHeight]);
 
-  const setMaxHeight1 = (event: any) => {
+  const setMaxHeight1 = useCallback((event: any) => {
     if (!maxValueSet) {
       setMaxHeight(event.nativeEvent.layout.height + 20);
       setMaxValueSet(true);
     }
-  };
+  }, [maxValueSet]);
 
-  const setMinHeight1 = (event: any) => {
+  const setMinHeight1 = useCallback((event: any) => {
     if (!minValueSet) {
       animation.setValue(event.nativeEvent.layout.height + 16);
 
       setMinHeight(event.nativeEvent.layout.height + 16);
       setMinValueSet(true);
     }
-  };
+  }, [animation, minValueSet]);
 
   useEffect(() => {
     const animationId = animation.addListener(({ value }: any) => {
@@ -54,13 +54,18 @@ const Panel: React.FC<PanelProps> = ({ title, children, type = 'separate' }) => 
     return () => {
       animation.removeListener(animationId);
     };
-  }, []);
+  }, [animation]);
+
+  const memoizedContainerStyle = useMemo(
+    () => [styles.container, { height: cardHeight }],
+    [cardHeight]
+  );
 
   return (
-    <Animated.View style={[styles.container, { height: cardHeight }]}>
+    <Animated.View style={memoizedContainerStyle}>
       <View style={{ padding: 10 }}>
         <Pressable
-          // onPress={toggle}
+          onPress={toggle}
           style={[
             styles.titleContainer,
             {
@@ -79,14 +84,11 @@ const Panel: React.FC<PanelProps> = ({ title, children, type = 'separate' }) => 
                   ? 0
                   : 10
                 : 10,
-              shadowOpacity: expanded
-                ? type === 'transparent'
-                  ? 0
-                  : 0.8
-                : 0.8,
+              shadowOpacity: expanded ? (type === 'transparent' ? 0 : 0.8) : 0.8,
             },
           ]}
-          onLayout={setMinHeight1}>
+          onLayout={setMinHeight1}
+        >
           <Text style={styles.title}>{title}</Text>
           <View style={styles.button}>
             <Ionicons
@@ -123,7 +125,8 @@ const Panel: React.FC<PanelProps> = ({ title, children, type = 'separate' }) => 
               borderTopRightRadius: type === 'transparent' ? 0 : 10,
             },
           ]}
-          onLayout={setMaxHeight1}>
+          onLayout={setMaxHeight1}
+        >
           {children}
         </View>
       </View>

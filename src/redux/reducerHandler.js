@@ -56,14 +56,20 @@ export const reducerDefault = (state = stateDefault, action, Action) => {
   }
 };
 
-export const reducerPaginationSimple = (state = statePagination, action, Action) => {
+export const reducerPaginationSimple = (
+  state = statePagination,
+  action,
+  Action,
+) => {
   switch (action.type) {
     case Action: {
       return {...state, isProcessing: true};
     }
     case _onSuccess(Action): {
       return {
-        data: action.shouldOverwriteExist ? action.data : [...state.data, ...action.data],
+        data: action.shouldOverwriteExist
+          ? action.data
+          : [...state.data, ...action.data],
         totalPage: action.totalPage || 1,
         currentPage: action.currentPage,
         isProcessing: false,
@@ -92,7 +98,9 @@ export const reducerPagination = (state = statePagination, action, Action) => {
     }
     case _onSuccess(Action): {
       //Check nếu muốn overwrite data đã tồn tại
-      const data = action.shouldOverwriteExist ? action.data : [...state.data, ...action.data];
+      const data = action.shouldOverwriteExist
+        ? action.data
+        : [...state.data, ...action.data];
       return {
         data: data,
         totalPage: action.totalPage || 1,
@@ -100,6 +108,7 @@ export const reducerPagination = (state = statePagination, action, Action) => {
         isProcessing: false,
         total: action.total,
         loaded: true,
+        lastVisible: action.lastVisible,
       };
     }
     //Case thêm item lên vị trí đầu tiên của mảng
@@ -150,12 +159,14 @@ export const reducerPagination = (state = statePagination, action, Action) => {
           if (action.isChild && item[action.idName] === action.parentId) {
             return {
               ...item,
-              [action.childrenArrayName]: item[action.childrenArrayName].map(child => {
-                if (child[action.idName] === action.childId) {
-                  return {...child, ...action.data};
-                }
-                return child;
-              }),
+              [action.childrenArrayName]: item[action.childrenArrayName].map(
+                child => {
+                  if (child[action.idName] === action.childId) {
+                    return {...child, ...action.data};
+                  }
+                  return child;
+                },
+              ),
             };
           }
           //Tìm và cập nhật item cha
@@ -175,10 +186,13 @@ export const reducerPagination = (state = statePagination, action, Action) => {
             if (item[action.idName] === action.parentId) {
               return {
                 ...item,
-                [action.childrenArrayName]: item[action.childrenArrayName].filter(item2 => item2[action.idName] !== action.childId),
+                [action.childrenArrayName]: item[
+                  action.childrenArrayName
+                ].filter(item2 => item2[action.idName] !== action.childId),
                 ...(action.childCounterName
                   ? {
-                      [action.childCounterName]: item[action.childCounterName] - 1,
+                      [action.childCounterName]:
+                        item[action.childCounterName] - 1,
                     }
                   : {}),
               };
@@ -206,7 +220,11 @@ export const reducerPagination = (state = statePagination, action, Action) => {
       return state;
   }
 };
-export const reducerPaginationRoom = (state = statePagination, action, Action) => {
+export const reducerPaginationRoom = (
+  state = statePagination,
+  action,
+  Action,
+) => {
   switch (action.type) {
     case Action:
       return {...state, isProcessing: true};
@@ -215,7 +233,9 @@ export const reducerPaginationRoom = (state = statePagination, action, Action) =
     }
     case _onSuccess(Action): {
       //Check nếu muốn overwrite data đã tồn tại
-      const data = action.shouldOverwriteExist ? action.data : [...state.data, ...action.data];
+      const data = action.shouldOverwriteExist
+        ? action.data
+        : [...state.data, ...action.data];
       return {
         data: data,
         totalPage: action.totalPage || 1,
@@ -275,18 +295,32 @@ export const reducerPaginationRoom = (state = statePagination, action, Action) =
       }
 
       const stateData = state?.data || [];
-      const {state: newDataRoomState, currentsession, _id: newDataRoomId} = newDataRoom;
+      const {
+        state: newDataRoomState,
+        currentsession,
+        _id: newDataRoomId,
+      } = newDataRoom;
       const isCurrentUserInSession = currentsession?.userid === action.user_Id;
       const roomIndex = stateData.findIndex(room => room._id === newDataRoomId);
-      const receivedState = stateData[0].currentsession?.userid !== action.user_Id && stateData[0].state === 'assigned';
+      const receivedState =
+        stateData[0].currentsession?.userid !== action.user_Id &&
+        stateData[0].state === 'assigned';
 
       // Kiểm tra trạng thái của phòng chat mới có giống với phòng chat hiện tại không
       if (newDataRoomState === stateData[0].state) {
         // Kiểm tra nếu phòng chat hiện tại đang ở trạng thái "assigned" và người dùng hiện tại không ở trong phiên và không nhận được trạng thái thì không làm gì cả
-        if (stateData[0].state === 'assigned' && !isCurrentUserInSession && !receivedState) {
+        if (
+          stateData[0].state === 'assigned' &&
+          !isCurrentUserInSession &&
+          !receivedState
+        ) {
         }
         // Kiểm tra nếu nhận được trạng thái mới và người dùng hiện tại đang trong phiên và phòng chat hiện tại đang ở trạng thái "assigned" thì không làm gì cả
-        else if (receivedState && isCurrentUserInSession && stateData[0].state === 'assigned') {
+        else if (
+          receivedState &&
+          isCurrentUserInSession &&
+          stateData[0].state === 'assigned'
+        ) {
         }
         // Nếu phòng chat đã tồn tại trong mảng stateData thì cập nhật phòng chat đó
         else {
@@ -298,14 +332,20 @@ export const reducerPaginationRoom = (state = statePagination, action, Action) =
                 ...stateData[roomIndex],
                 ...newDataRoom,
                 _unread: stateData[roomIndex]._unread + 1,
-                lastmessage: {...stateData[roomIndex].lastmessage, text: action?.newMessage?.text},
+                lastmessage: {
+                  ...stateData[roomIndex].lastmessage,
+                  text: action?.newMessage?.text,
+                },
               };
             } else {
               updatedRoom = {
                 ...stateData[roomIndex],
                 ...newDataRoom,
                 _unread: 1,
-                lastmessage: {...stateData[roomIndex].lastmessage, text: action?.newMessage?.text},
+                lastmessage: {
+                  ...stateData[roomIndex].lastmessage,
+                  text: action?.newMessage?.text,
+                },
               };
             }
             // Xóa phòng chat cũ trong mảng stateData và thêm phòng chat mới vào đầu mảng
@@ -319,7 +359,10 @@ export const reducerPaginationRoom = (state = statePagination, action, Action) =
               ...stateData[roomIndex],
               ...newDataRoom,
               _unread: 1,
-              lastmessage: {...newDataRoom.lastmessage, text: action?.newMessage?.text},
+              lastmessage: {
+                ...newDataRoom.lastmessage,
+                text: action?.newMessage?.text,
+              },
             };
             stateData.unshift(updatedRoom);
             // Nếu mảng stateData có độ dài lớn hơn 25, xóa phần tử cuối cùng của mảng
@@ -356,7 +399,11 @@ export const reducerPaginationRoom = (state = statePagination, action, Action) =
   }
 };
 
-export const reducerPaginationMessage = (state = statePagination, action, Action) => {
+export const reducerPaginationMessage = (
+  state = statePagination,
+  action,
+  Action,
+) => {
   switch (action.type) {
     case Action:
       return {...state, isProcessing: true};
@@ -365,7 +412,9 @@ export const reducerPaginationMessage = (state = statePagination, action, Action
     }
     case _onSuccess(Action): {
       //Check nếu muốn overwrite data đã tồn tại
-      const data = action.shouldOverwriteExist ? action.data : [...state.data, ...action.data];
+      const data = action.shouldOverwriteExist
+        ? action.data
+        : [...state.data, ...action.data];
       return {
         data: data,
         totalPage: action.totalPage || 1,
@@ -409,9 +458,14 @@ export const reducerPaginationMessage = (state = statePagination, action, Action
               if (
                 !error &&
                 obj._me !== false &&
-                ((obj.class_forstatemessage !== 'omnichat-msg_error' && obj._me === true) ||
-                  (obj.class_forstatemessage === 'omnichat-msg_error' && obj._me === false)) &&
-                (type === 'seen' || (type === 'delivered' && (!obj.class_forstatemessage || obj.class_forstatemessage === 'omnichat-msg_delivered')))
+                ((obj.class_forstatemessage !== 'omnichat-msg_error' &&
+                  obj._me === true) ||
+                  (obj.class_forstatemessage === 'omnichat-msg_error' &&
+                    obj._me === false)) &&
+                (type === 'seen' ||
+                  (type === 'delivered' &&
+                    (!obj.class_forstatemessage ||
+                      obj.class_forstatemessage === 'omnichat-msg_delivered')))
               ) {
                 // Cập nhật tất cả theo trạng thái đã truyền
                 return {...obj, class_forstatemessage};
@@ -459,12 +513,14 @@ export const reducerPaginationMessage = (state = statePagination, action, Action
           if (action.isChild && item[action.idName] === action.parentId) {
             return {
               ...item,
-              [action.childrenArrayName]: item[action.childrenArrayName].map(child => {
-                if (child[action.idName] === action.childId) {
-                  return {...child, ...action.data};
-                }
-                return child;
-              }),
+              [action.childrenArrayName]: item[action.childrenArrayName].map(
+                child => {
+                  if (child[action.idName] === action.childId) {
+                    return {...child, ...action.data};
+                  }
+                  return child;
+                },
+              ),
             };
           }
           //Tìm và cập nhật item cha
@@ -484,10 +540,13 @@ export const reducerPaginationMessage = (state = statePagination, action, Action
             if (item[action.idName] === action.parentId) {
               return {
                 ...item,
-                [action.childrenArrayName]: item[action.childrenArrayName].filter(item2 => item2[action.idName] !== action.childId),
+                [action.childrenArrayName]: item[
+                  action.childrenArrayName
+                ].filter(item2 => item2[action.idName] !== action.childId),
                 ...(action.childCounterName
                   ? {
-                      [action.childCounterName]: item[action.childCounterName] - 1,
+                      [action.childCounterName]:
+                        item[action.childCounterName] - 1,
                     }
                   : {}),
               };

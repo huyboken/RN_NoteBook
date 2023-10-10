@@ -6,6 +6,8 @@ import Toolbar from './Toolbar';
 import InputField from './InputField';
 import Loading from './Loading';
 import Swipeable from './Swipeable';
+import FooterFlatlist from './FooterFlatlist';
+import EmptyFlatlist from './EmptyFlatlist';
 
 export default {
   Container,
@@ -16,4 +18,6 @@ export default {
   InputField,
   Loading,
   Swipeable,
+  FooterFlatlist,
+  EmptyFlatlist,
 };
