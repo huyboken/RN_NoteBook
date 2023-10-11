@@ -26,8 +26,13 @@ const PasswordScreen = () => {
   const deleteStatus = useSelector(state => state.deletePassword.data);
   const getAllPasswordLoading = useSelector(state => state.getAllPassword.isProcessing);
 
+  const [modal, setModal] = useState({visible: false, message: '', type: '', isProcessing: false});
+
+  const onClose = () => setModal({...modal, visible: false, isProcessing: false});
+
   useEffect(() => {
     if (deleteStatus?.status) {
+      setModal({visible: true, message: deleteStatus.message, type: 'success', isProcessing: false});
       dispatch({
         type: _onRemoveOne(actions.GET_ALL_PASSWORD),
         parentId: deleteStatus?.id,
@@ -35,25 +40,41 @@ const PasswordScreen = () => {
       });
     }
     if (deleteStatus?.status == 0) {
+      setModal({visible: true, message: deleteStatus.message, type: 'failure', isProcessing: false});
       dispatch({type: _onUnmount(actions.GET_ALL_PASSWORD)});
     }
   }, [deleteStatus]);
 
-  const Item = ({item, index, onDelete = () => {}}) => {
+  const Item = ({item, index, onDelete = () => {}, onUpdate = () => {}}) => {
     return (
-      <ViewApp.Swipeable index={index} prevOpenedRowRef={prevOpenedRowRef} onDelete={() => onDelete(item.id)}>
-        <ViewApp.Panel title={item.name} type="transparent">
-          <ViewApp.InputField styleInput={{backgroundColor: '#E5FBFE'}} value={item.login} placeholder={'Login'} />
-          <ViewApp.InputField styleInput={{backgroundColor: '#E5FBFE'}} value={item.password} placeholder={'Password'} />
-          <ViewApp.InputField styleInput={{backgroundColor: '#E5FBFE', color: '#00A1BB'}} value={item?.link} placeholder={'Link'} />
+      <ViewApp.Swipeable index={index} prevOpenedRowRef={prevOpenedRowRef} onDelete={() => onDelete(item.id)} onUpdate={() => onUpdate(item)}>
+        <ViewApp.Panel title={item.name}>
+          <ViewApp.InputField styleInput={{backgroundColor: '#E5FBFE'}} value={item.login} placeholder={t('login')} editable={false} />
+          <ViewApp.InputField styleInput={{backgroundColor: '#E5FBFE'}} value={item.password} placeholder={t('password')} editable={false} />
+          <ViewApp.InputField
+            styleInput={{backgroundColor: '#E5FBFE', color: '#00A1BB'}}
+            value={item?.link}
+            placeholder={t('link')}
+            editable={false}
+          />
         </ViewApp.Panel>
       </ViewApp.Swipeable>
     );
   };
-  const renderItem = ({item}) => <Item item={item} index={item} onDelete={onDelete} />;
+  const renderItem = ({item}) => <Item item={item} index={item} onDelete={onDelete} onUpdate={onUpdate} />;
 
   const onDelete = id => {
     dispatch({type: actions.DELETE_PASSWORD, body: id});
+    setModal({
+      visible: true,
+      message: t('pleaseWait'),
+      type: '',
+      isProcessing: true,
+    });
+  };
+
+  const onUpdate = item => {
+    navigation.navigate('PasswordStack', {screen: 'AddPasswordScreen', params: {...item, update: true}});
   };
 
   const refreshControl = (
@@ -79,7 +100,7 @@ const PasswordScreen = () => {
       </Animated.View>
       {/* <CreatePin /> */}
       <FlashList
-        // bounces={false}
+        bounces={false}
         estimatedItemSize={50}
         contentContainerStyle={{paddingTop: 50}}
         data={getAllPassword}
@@ -95,6 +116,14 @@ const PasswordScreen = () => {
         onScroll={e => scrollY.setValue(e.nativeEvent.contentOffset.y)}
       />
       <ViewApp.FABAdd onPress={() => (navigation.removeListener, navigation.navigate('PasswordStack', {screen: 'AddPasswordScreen'}))} />
+      <ViewApp.MessageModal
+        visible={modal.visible}
+        message={modal.message}
+        type={modal.type}
+        isProcessing={modal.isProcessing}
+        onClose={onClose}
+        // onHiden={onHiden}
+      />
     </ViewApp.Container>
   );
 };

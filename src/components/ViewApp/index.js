@@ -8,6 +8,7 @@ import Loading from './Loading';
 import Swipeable from './Swipeable';
 import FooterFlatlist from './FooterFlatlist';
 import EmptyFlatlist from './EmptyFlatlist';
+import MessageModal from './MessageModal';
 
 export default {
   Container,
@@ -20,4 +21,5 @@ export default {
   Swipeable,
   FooterFlatlist,
   EmptyFlatlist,
+  MessageModal,
 };

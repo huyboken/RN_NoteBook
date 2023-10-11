@@ -38,8 +38,21 @@ const create = async (collection, bodyData) => {
     .catch(error => ({status: 0, message: error || `create ${collection} fail`}));
 };
 
+const update = async (collection, id, bodyData) => {
+  return firestore()
+    .collection(collection)
+    .doc(id)
+    .update({
+      ...bodyData,
+      updateAt: firestore.FieldValue.serverTimestamp(),
+    })
+    .then(res => {
+      return {status: 1, message: 'update success'};
+    })
+    .catch(error => ({status: 0, message: error || `update ${collection} fail`}));
+};
+
 const remove = async (collection, bodyData) => {
-  // const userId = await AsyncStorage.getItem('UserId');
   return firestore()
     .collection(collection)
     .doc(bodyData)
@@ -50,4 +63,4 @@ const remove = async (collection, bodyData) => {
     .catch(error => ({status: 0, message: error || `remove ${collection} fail`}));
 };
 
-export default {getAll, create, remove};
+export default {getAll, create, update, remove};

@@ -33,6 +33,19 @@ function* createPassword(payload) {
   }
 }
 
+function* updatePassword(payload) {
+  try {
+    const res = yield API.update('passwords', payload.id, payload.body);
+    if (res.status) {
+      yield put({type: _onSuccess(actions.UPDATE_PASSWORD), data: res});
+    } else {
+      yield put({type: _onFail(actions.UPDATE_PASSWORD)});
+    }
+  } catch (e) {
+    yield put({type: _onFail(actions.UPDATE_PASSWORD)});
+  }
+}
+
 function* deletePassword(payload) {
   try {
     const res = yield API.remove('passwords', payload.body);
@@ -53,4 +66,5 @@ export default function* watchPasswordSagas() {
   yield takeLatest(actions.GET_ALL_PASSWORD, getAllPassword);
   yield takeLatest(actions.CREATE_PASSWORD, createPassword);
   yield takeLatest(actions.DELETE_PASSWORD, deletePassword);
+  yield takeLatest(actions.UPDATE_PASSWORD, updatePassword);
 }

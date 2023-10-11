@@ -18,6 +18,7 @@ interface ICustomInputProps {
   value: any,
   styleInput: StyleProp<TextStyle>,
   keyboardType: KeyboardType;
+  editable: any
 }
 
 const InputField: React.FC<ICustomInputProps> = ({
@@ -27,6 +28,7 @@ const InputField: React.FC<ICustomInputProps> = ({
   value,
   styleInput,
   keyboardType,
+  editable = true
 }) => {
   const [text, setText] = useState<any>('');
   const [focus, setFocus] = useState<any>(false);
@@ -54,6 +56,7 @@ const InputField: React.FC<ICustomInputProps> = ({
         keyboardType={keyboardType || 'email-address'}
         multiline={multiline}
         value={value || text}
+        editable={editable}
       />
       <View
         style={[styles.line, { borderTopColor: focus ? '#00A1BB' : '#E2EBED' }]}
