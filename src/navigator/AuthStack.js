@@ -8,6 +8,7 @@ import {actions} from '../redux/constants';
 const Stack = createNativeStackNavigator();
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 
 const AuthStack = () => {
   const dispatch = useDispatch();
@@ -16,8 +17,12 @@ const AuthStack = () => {
     // Khởi tạo Firebase
     auth().onAuthStateChanged(user => {
       if (user) {
-        dispatch({type: actions.GET_USER_INFO, user: user});
         AsyncStorage.setItem('UserId', user.uid);
+        firestore()
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then(res => !res.exists && firestore().collection('users').doc(user.uid).set({userId: user.uid}));
       } else {
         console.log('Người dùng chưa được xác thực');
       }

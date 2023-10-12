@@ -19,6 +19,7 @@ export default function MainStack() {
 
   useEffect(() => {
     dispatch({type: actions.GET_ALL_PASSWORD, shouldOverwriteExist: true});
+    dispatch({type: actions.GET_USER_INFO});
   }, []);
 
   return (
@@ -32,46 +33,30 @@ export default function MainStack() {
           tabBarIcon: ({focused, color, size}) => {
             if (route.name === 'HomeStack') {
               return (
-                <ViewApp.BottomTab
-                  styles={{backgroundColor: focused ? '#00D3ED' : '#fff'}}>
-                  {!focused && (
-                    <Feather name="home" size={size} color={color} />
-                  )}
+                <ViewApp.BottomTab styles={{backgroundColor: focused ? '#00D3ED' : '#fff'}}>
+                  {!focused && <Feather name="home" size={size} color={color} />}
                   {focused && <Text style={styles.tabLabel}>{t('home')}</Text>}
                 </ViewApp.BottomTab>
               );
             } else if (route.name === 'NoteStack') {
               return (
-                <ViewApp.BottomTab
-                  styles={{backgroundColor: focused ? '#00D3ED' : '#fff'}}>
-                  {!focused && (
-                    <Entypo name="pencil" size={size} color={color} />
-                  )}
+                <ViewApp.BottomTab styles={{backgroundColor: focused ? '#00D3ED' : '#fff'}}>
+                  {!focused && <Entypo name="pencil" size={size} color={color} />}
                   {focused && <Text style={styles.tabLabel}>{t('notes')}</Text>}
                 </ViewApp.BottomTab>
               );
             } else if (route.name === 'CalendarStack') {
               return (
-                <ViewApp.BottomTab
-                  styles={{backgroundColor: focused ? '#00D3ED' : '#fff'}}>
-                  {!focused && (
-                    <Feather name="calendar" size={size} color={color} />
-                  )}
-                  {focused && (
-                    <Text style={styles.tabLabel}>{t('calendar')}</Text>
-                  )}
+                <ViewApp.BottomTab styles={{backgroundColor: focused ? '#00D3ED' : '#fff'}}>
+                  {!focused && <Feather name="calendar" size={size} color={color} />}
+                  {focused && <Text style={styles.tabLabel}>{t('calendar')}</Text>}
                 </ViewApp.BottomTab>
               );
             } else if (route.name === 'PasswordStack') {
               return (
-                <ViewApp.BottomTab
-                  styles={{backgroundColor: focused ? '#00D3ED' : '#fff'}}>
-                  {!focused && (
-                    <Octicons name="key-asterisk" size={size} color={color} />
-                  )}
-                  {focused && (
-                    <Text style={styles.tabLabel}>{t('password')}</Text>
-                  )}
+                <ViewApp.BottomTab styles={{backgroundColor: focused ? '#00D3ED' : '#fff'}}>
+                  {!focused && <Octicons name="key-asterisk" size={size} color={color} />}
+                  {focused && <Text style={styles.tabLabel}>{t('password')}</Text>}
                 </ViewApp.BottomTab>
               );
             }

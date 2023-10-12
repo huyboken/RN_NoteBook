@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {PinView} from '../../../../components';
+import {View} from 'react-native';
+import PinView from '../PinView';
 import {t} from 'i18next';
-import {Alert, View} from 'react-native';
-const CreatePin = () => {
+
+const CreatePin = ({onClose = () => {}, onSubmit = () => {}}) => {
   const pinRef = useRef(null);
   const rePinRef = useRef(null);
   const [createPin, setCreatePin] = useState({
@@ -30,17 +31,17 @@ const CreatePin = () => {
           repin: '',
         });
         rePinRef?.current?.clearAll();
-        Alert.alert('success', '123');
+        onSubmit(+createPin.pin);
       } else {
         setCreatePin({
           ...createPin,
-          showPin: false,
+          showPin: true,
           showRePin: false,
           pin: '',
           repin: '',
         });
-        Alert.alert('fail', '123');
         rePinRef?.current?.clearAll();
+        onClose();
       }
     }
   }, [createPin.repin]);
@@ -54,6 +55,7 @@ const CreatePin = () => {
           onBiometrics={() => console.log('onBiometrics')}
           title={t('createYourPass')}
           subTitle={t('createYourPassSub')}
+          disableIconLeft={true}
         />
       )}
       {createPin.showRePin && (
@@ -63,6 +65,7 @@ const CreatePin = () => {
           onBiometrics={() => console.log('onBiometrics')}
           title={t('repeatNewPass')}
           subTitle={t('repeatNewPassSub')}
+          disableIconLeft={true}
         />
       )}
     </View>

@@ -13,4 +13,8 @@ const getUserInfo = (...props) => {
   return reducerDefault(...props, actions.GET_USER_INFO);
 };
 
-export const userReducers = {setFirstTimeUse, getFirstTimeUse, getUserInfo};
+const updateUserInfo = (...props) => {
+  return reducerDefault(...props, actions.UPDATE_USER_INFO);
+};
+
+export const userReducers = {setFirstTimeUse, getFirstTimeUse, getUserInfo, updateUserInfo};

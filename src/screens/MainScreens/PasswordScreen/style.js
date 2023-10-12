@@ -12,4 +12,19 @@ export default StyleSheet.create({
     right: 0,
     backgroundColor: 'white',
   },
+  toolbarActionRight: {
+    position: 'absolute',
+    right: 15,
+    bottom: 10,
+    flexDirection: 'row',
+  },
+  toolbarActionRightIcon: {
+    fontSize: 28,
+    color: 'black',
+  },
+  rootView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
 });

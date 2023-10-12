@@ -22,6 +22,18 @@ const getAll = async (collection, currentPage = 10, lastVisible = '') => {
     .catch(error => ({status: 0, message: error || `get ${collection} fail`}));
 };
 
+const get = async (collection, id) => {
+  const userId = await AsyncStorage.getItem('UserId');
+  return firestore()
+    .collection(collection)
+    .doc(id || userId)
+    .get()
+    .then(res => {
+      return res.data();
+    })
+    .catch(error => ({status: 0, message: error || `get ${collection} fail`}));
+};
+
 const create = async (collection, bodyData) => {
   const userId = await AsyncStorage.getItem('UserId');
   return firestore()
@@ -63,4 +75,4 @@ const remove = async (collection, bodyData) => {
     .catch(error => ({status: 0, message: error || `remove ${collection} fail`}));
 };
 
-export default {getAll, create, update, remove};
+export default {getAll, get, create, update, remove};

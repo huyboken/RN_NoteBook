@@ -6,12 +6,12 @@ export default StyleSheet.create({
     color: 'black',
     fontSize: 24,
     fontFamily: Fonts.POPPINS_BOLD,
+    paddingBottom: 10,
   },
   subTitle: {
     color: 'grey',
     fontSize: 14,
     fontFamily: Fonts.POPPINS_MEDIUM,
-    paddingTop: 10,
     paddingBottom: 20,
     textAlign: 'center',
   },
